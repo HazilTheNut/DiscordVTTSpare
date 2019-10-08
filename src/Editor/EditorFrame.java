@@ -1,5 +1,6 @@
 package Editor;
 
+import Data.FileIO;
 import Data.GameMap;
 import Editor.Mapping.GameMapEditorPane;
 
@@ -30,6 +31,9 @@ public class EditorFrame extends JFrame {
         setSize(new Dimension(850, 790));
 
         setTitle("DnDiscord - Discord Dungeons and Dragons Gameplay Assistant");
+        FileIO io = new FileIO();
+        ImageIcon icon = new ImageIcon(io.getRootFilePath().concat("Icons/icon.png"));
+        setIconImage(icon.getImage());
 
         setVisible(true);
 

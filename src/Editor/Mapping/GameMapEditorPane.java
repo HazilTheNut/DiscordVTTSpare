@@ -47,6 +47,7 @@ public class GameMapEditorPane extends JPanel {
         LayerManager manager = new LayerManager(viewWindow);
         manager.addLayer(gameMap.getBackdrop());
         manager.addLayer(gameMap.getTokenLayer());
+        manager.addLayer(gameMap.getHideLayer());
         manager.addLayer(mouseHighlight);
 
         //Hook everything else up
@@ -94,7 +95,10 @@ public class GameMapEditorPane extends JPanel {
 
         topToolbar.add(new JLabel(" | "));
 
-        topToolbar.add(new LayerToggler(gameMap.getHideLayer(), "hide"));
+        topToolbar.add(new LayerToggler(gameMap.getHideLayer(), "vision"));
+        topToolbar.add(drawToolManager.generateToolButton(new VisionToggleAll(), "Icons/toggleall.png", "(Vision) Toggle All"));
+        topToolbar.add(drawToolManager.generateToolButton(new VisionRectangle(manager, null), "Icons/showarea.png", "(Vision) Show Area"));
+        topToolbar.add(drawToolManager.generateToolButton(new VisionRectangle(manager, new SpecialText(' ', Color.WHITE, VisionConstants.VISION_HIDE_COLOR)), "Icons/hidearea.png", "(Vision) Hide Area"));
 
         add(topToolbar, BorderLayout.PAGE_START);
     }
