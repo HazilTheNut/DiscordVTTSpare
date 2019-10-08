@@ -1,0 +1,11 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="DnDiscord">
+    <output-path>$PROJECT_DIR$/CompiledProduct</output-path>
+    <root id="archive" name="DnDiscord.jar">
+      <element id="module-output" name="DnDiscord" />
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/CompiledProduct/META-INF/MANIFEST.MF" />
+      </element>
+    </root>
+  </artifact>
+</component>
