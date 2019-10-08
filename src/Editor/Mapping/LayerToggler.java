@@ -1,4 +1,4 @@
-package Editor;
+package Editor.Mapping;
 
 import Engine.Layer;
 

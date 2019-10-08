@@ -36,18 +36,17 @@ public class ArtLine extends DrawTool {
     public ArtLine(LayerManager manager) {
         lm = manager;
         name = "Line Tool";
-        label = "Width: ";
+        label = "Width:";
     }
 
     @Override
     public void onActivate(JPanel panel) {
         brushSizeBox = new JSpinner(new SpinnerNumberModel(1, 1, 20, 1));
-        brushSizeBox.setMaximumSize(new Dimension(50, 20));
-        panel.setBorder(BorderFactory.createTitledBorder(name));
+        //brushSizeBox.setMaximumSize(new Dimension(50, 20));
+        panel.setBorder(BorderFactory.createEtchedBorder());
         JLabel boxLabel = new JLabel(label);
-        //panel.setLayout(new BoxLayout(panel, BoxLayout.LINE_AXIS));
-        panel.add(boxLabel);
-        panel.add(brushSizeBox);
+        panel.add(boxLabel, BorderLayout.LINE_START);
+        panel.add(brushSizeBox, BorderLayout.CENTER);
         panel.validate();
         panel.setVisible(true);
 

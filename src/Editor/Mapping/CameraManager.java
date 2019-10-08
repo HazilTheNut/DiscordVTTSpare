@@ -1,5 +1,6 @@
-package Editor;
+package Editor.Mapping;
 
+import Editor.EditorFrame;
 import Engine.Layer;
 
 import javax.swing.*;

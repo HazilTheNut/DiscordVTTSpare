@@ -25,18 +25,8 @@ public class ArtFill extends DrawTool {
     
     @Override
     public void onActivate(JPanel panel) {
-        if (panel instanceof CollapsiblePanel) {
-            CollapsiblePanel collapsiblePanel = (CollapsiblePanel) panel;
-            collapsiblePanel.setNormalSize(new Dimension(100, 75));
-        }
-        fillSizeBox = new JSpinner(new SpinnerNumberModel(150, 1, 999, 1));
-        fillSizeBox.setMaximumSize(new Dimension(45, 20));
-        edgesOnlyBox = new JCheckBox();
-        panel.setBorder(BorderFactory.createTitledBorder("Fill Tool"));
-        JLabel boxLabel = new JLabel("Max: ");
-        panel.add(boxLabel);
-        panel.add(fillSizeBox);
-        panel.add(new JLabel("Edge Only:"));
+        edgesOnlyBox = new JCheckBox("Edge Only");
+        panel.setBorder(BorderFactory.createEtchedBorder());
         panel.add(edgesOnlyBox);
         panel.validate();
         panel.setVisible(true);

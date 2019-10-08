@@ -22,7 +22,7 @@ public class ExpandRoom extends DrawTool {
     private GameMap gamemap;
     private LayerManager lm;
 
-    public ExpandRoom(GameMap GameMap, LayerManager manager, EditorFrame editorFrame){
+    public ExpandRoom(GameMap GameMap, LayerManager manager){
         gamemap = GameMap;
         lm = manager;
     }

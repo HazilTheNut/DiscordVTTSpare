@@ -1,4 +1,4 @@
-package Editor;
+package Editor.Mapping;
 
 import Data.GameMap;
 import Engine.SpecialText;

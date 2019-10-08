@@ -14,7 +14,7 @@ import java.util.ArrayList;
 /**
  * Created by Jared on 2/18/2018.
  */
-public class ViewWindow extends JComponent implements ComponentListener, MouseInputListener, KeyListener{
+public class ViewWindow extends JComponent implements ComponentListener, MouseInputListener, KeyListener, FocusListener{
 
     /**
      * ViewWindow:
@@ -120,7 +120,8 @@ public class ViewWindow extends JComponent implements ComponentListener, MouseIn
             }
         }
 
-        g.setColor(new Color(50, 50, 50)); //Draw margin borders
+        if (!isFocusOwner()) g.setColor(new Color(50, 50, 50)); //Draw margin borders
+        else g.setColor(new Color(100, 100, 100));
         g.drawLine(HOR_MARGIN, 0, HOR_MARGIN, getHeight());
         g.drawLine(getWidth() - HOR_MARGIN, 0, getWidth() - HOR_MARGIN, getHeight());
         g.drawLine(0, VER_MARGIN, getWidth(), VER_MARGIN);
@@ -159,6 +160,7 @@ public class ViewWindow extends JComponent implements ComponentListener, MouseIn
 
     @Override
     public void mouseDragged(MouseEvent e) {
+        //for (MouseMotionListener listener : getMouseMotionListeners()) listener.mouseDragged(e);
         //System.out.println(String.format("Mouse Current: [%1$d,%2$d] Prev: [%3$d,%4$d]", getSnappedMouseX(e.getX()), getSnappedMouseY(e.getY()), previousXCharPos, previousCharYPos));
         manager.moveCameraPos(getSnappedMouseX(e.getX()) - previousXCharPos, getSnappedMouseY(e.getY()) - previousCharYPos);
         previousXCharPos = getSnappedMouseX(e.getX());
@@ -167,6 +169,7 @@ public class ViewWindow extends JComponent implements ComponentListener, MouseIn
 
     @Override
     public void mouseMoved(MouseEvent e) {
+        //for (MouseMotionListener listener : getMouseMotionListeners()) listener.mouseMoved(e);
         //System.out.println(String.format("New Mouse Pos: %1$d,%2$d", e.getX(), e.getY()));
     }
 
@@ -193,6 +196,7 @@ public class ViewWindow extends JComponent implements ComponentListener, MouseIn
         if (e.getKeyCode() == KeyEvent.VK_RIGHT){
             manager.moveCameraPos(-1,0);
         }
+        //System.out.println("Key Pressed");
     }
 
     @Override
@@ -207,13 +211,16 @@ public class ViewWindow extends JComponent implements ComponentListener, MouseIn
 
     @Override
     public void mousePressed(MouseEvent e) {
+        //for (MouseListener listener : getMouseListeners()) listener.mousePressed(e);
         previousXCharPos = getSnappedMouseX(e.getX());
         previousCharYPos = getSnappedMouseY(e.getY());
+        //System.out.println("Mouse clicked!");
+        requestFocusInWindow();
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-
+        //for (MouseListener listener : getMouseListeners()) listener.mouseReleased(e);
     }
 
     @Override
@@ -224,5 +231,15 @@ public class ViewWindow extends JComponent implements ComponentListener, MouseIn
     @Override
     public void mouseExited(MouseEvent e) {
 
+    }
+
+    @Override
+    public void focusGained(FocusEvent e) {
+        repaint();
+    }
+
+    @Override
+    public void focusLost(FocusEvent e) {
+        repaint();
     }
 }

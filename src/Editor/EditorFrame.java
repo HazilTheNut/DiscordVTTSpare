@@ -1,12 +1,8 @@
 package Editor;
 
-import Data.LayerImportances;
 import Data.GameMap;
-import Engine.Layer;
-import Engine.LayerManager;
-import Engine.SpecialGraphics.EditorLevelBoundGraphics;
-import Engine.SpecialText;
-import Engine.ViewWindow;
+import Editor.Mapping.GameMapEditorPane;
+import Editor.Mapping.LayerToggler;
 
 import javax.swing.*;
 import java.awt.*;
@@ -35,41 +31,11 @@ public class EditorFrame extends JFrame {
 
         setLayout(new BorderLayout());
 
-        ViewWindow window = new ViewWindow();
-        c.addComponentListener(window);
-        c.addKeyListener(window);
+        JTabbedPane mainPane = new JTabbedPane();
+        mainPane.addTab("GameMap", new GameMapEditorPane(gamemap));
+        mainPane.setFocusable(true);
 
-        //Create layers
-        Layer mouseHighlight = new Layer(new SpecialText[window.RESOLUTION_WIDTH*4][window.RESOLUTION_HEIGHT*4], "mouse", 0, 0, LayerImportances.CURSOR);
-        mouseHighlight.fixedScreenPos = true;
-
-        //Send layers to LayerManager, which also needs to be instantiated.
-        LayerManager manager = new LayerManager(window);
-        manager.addLayer(gamemap.getBackdrop());
-        manager.addLayer(gamemap.getTokenLayer());
-        manager.addLayer(mouseHighlight);
-
-        window.addSpecialGraphics(new EditorLevelBoundGraphics(window, manager, gamemap));
-
-        //View Window panel
-        JPanel windowPanel = new JPanel(new BorderLayout());
-        windowLayersPanel = new JPanel();
-        windowLayersPanel.setBorder(BorderFactory.createEtchedBorder());
-        windowLayersPanel.setLayout(new WrapLayout(FlowLayout.LEFT, 2, 0));
-        windowLayersPanel.add(new LayerToggler(gamemap.getBackdrop(), " Backdrop "));
-        windowLayersPanel.add(new LayerToggler(gamemap.getTokenLayer(), " Tokens "));
-        windowPanel.add(windowLayersPanel, BorderLayout.PAGE_START);
-        windowPanel.add(window, BorderLayout.CENTER);
-
-        c.add(windowPanel, BorderLayout.CENTER);
-        //Create Text Panel
-
-        UndoManager undoManager = new UndoManager(gamemap, this);
-        //Establish mouse input
-        EditorMouseInput mi = new EditorMouseInput(window, manager, mouseHighlight, gamemap.getBackdrop(), gamemap, undoManager);
-        window.addMouseListener(mi);
-        window.addMouseMotionListener(mi);
-        window.addMouseWheelListener(mi);
+        c.add(mainPane);
 
         c.validate();
 
@@ -138,7 +104,7 @@ public class EditorFrame extends JFrame {
         });
     }
 
-    void updateLayerControllers(){
+    public void updateLayerControllers(){
         for (Component c : windowLayersPanel.getComponents())
             if (c instanceof LayerToggler) {
                 LayerToggler layerToggler = (LayerToggler) c;

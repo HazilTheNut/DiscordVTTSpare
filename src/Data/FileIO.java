@@ -1,6 +1,6 @@
 package Data;
 
-import Editor.CameraManager;
+import Editor.Mapping.CameraManager;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;

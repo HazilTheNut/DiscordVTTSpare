@@ -34,9 +34,8 @@ public class ArtRectangle extends DrawTool {
     @Override
     public void onActivate(JPanel panel) {
         fillBox = new JCheckBox("Filled", false); //Allow input for switching between filled and empty rectangles
-        //panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS)); //BoxLayout does not pack down like BorderLayout, ensuring consistent panel sizes between tools.
+        panel.setBorder(BorderFactory.createEtchedBorder());
         panel.add(fillBox);
-        panel.setBorder(BorderFactory.createTitledBorder("Rectangle"));
         panel.setVisible(true);
         panel.validate();
 

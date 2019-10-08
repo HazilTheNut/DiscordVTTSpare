@@ -1,4 +1,4 @@
-package Editor;
+package Editor.Mapping;
 
 import Data.GameMap;
 
@@ -8,7 +8,7 @@ import java.util.ArrayList;
 /**
  * Created by Jared on 3/20/2018.
  */
-class UndoManager {
+public class UndoManager {
 
     /**
      * UndoManager:
@@ -27,7 +27,7 @@ class UndoManager {
     private static final int MAX_UNDO_HISTORY = 200;
     private int historyPointer;
 
-    UndoManager(GameMap gamemap, JFrame editorFrame){
+    public UndoManager(GameMap gamemap, JFrame editorFrame){
         currentGameMap = gamemap;
         this.editorFrame = editorFrame;
         System.out.printf("[UndoManager] Level history size: %1$d\n", pastGameMap.size());
@@ -66,7 +66,7 @@ class UndoManager {
     }
 
     private void addFrameAsterisk(){
-        if (!editorFrame.getTitle().contains("*")){
+        if (editorFrame != null && !editorFrame.getTitle().contains("*")){
             editorFrame.setTitle(editorFrame.getTitle().concat("*"));
         }
     }

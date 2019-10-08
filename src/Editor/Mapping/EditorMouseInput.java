@@ -1,4 +1,4 @@
-package Editor;
+package Editor.Mapping;
 
 import Data.GameMap;
 import Editor.DrawTools.DrawTool;
@@ -36,23 +36,24 @@ public class EditorMouseInput implements MouseInputListener, MouseWheelListener{
 
     private Layer backdropLayer;
 
-    private DrawTool drawTool;
+    private DrawToolManager drawToolManager;
 
     private GameMap gamemap;
 
     private boolean movingCamera = false;
     private boolean drawing = false;
 
-    EditorMouseInput(ViewWindow viewWindow, LayerManager layerManager, Layer highlight, Layer backdrop, GameMap GameMap, UndoManager undoManager){
+    public EditorMouseInput(ViewWindow viewWindow, LayerManager layerManager, Layer highlight, GameMap GameMap, UndoManager undoManager, DrawToolManager drawToolManager){
         window = viewWindow;
         manager = layerManager;
         highlightLayer = highlight;
-        backdropLayer = backdrop;
         originalResolutionWidth = window.RESOLUTION_WIDTH;
         originalResolutionHeight = window.RESOLUTION_HEIGHT;
         gamemap = GameMap;
+        backdropLayer = gamemap.getBackdrop();
         this.undoManager = undoManager;
         cursorTooltip = new EditorMouseTooltip(GameMap, window);
+        this.drawToolManager = drawToolManager;
         window.addSpecialGraphics(cursorTooltip);
     }
 
@@ -69,6 +70,7 @@ public class EditorMouseInput implements MouseInputListener, MouseWheelListener{
 
     @Override
     public void mousePressed(MouseEvent e) {
+        DrawTool drawTool = drawToolManager.getActiveTool();
         if (e.getButton() == MouseEvent.BUTTON3) { //If right-click
             if (drawing){ //Cancels drawing if that was what was going on.
                 drawTool.onCancel(highlightLayer, getLayerMousePosX(e.getX()), getLayerMousePosY(e.getY()));
@@ -80,15 +82,16 @@ public class EditorMouseInput implements MouseInputListener, MouseWheelListener{
                 highlightLayer.editLayer(window.getSnappedMouseX(e.getX()), window.getSnappedMouseY(e.getY()), null);
             }
         } else if (e.getButton() == MouseEvent.BUTTON1 && !movingCamera && drawTool != null){ //Left-click starts drawing
-            drawTool.onDrawStart(backdropLayer, highlightLayer, getLayerMousePosX(e.getX()), getLayerMousePosY(e.getY()), new SpecialText(' '));
+            drawTool.onDrawStart(backdropLayer, highlightLayer, getLayerMousePosX(e.getX()), getLayerMousePosY(e.getY()), drawToolManager.getActiveCharacter());
             drawing = true;
         }
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
+        DrawTool drawTool = drawToolManager.getActiveTool();
         if (drawing && e.getButton() == MouseEvent.BUTTON1 && drawTool != null) { //Should tell the DrawTool to end
-            drawTool.onDrawEnd(backdropLayer, highlightLayer, getLayerMousePosX(e.getX()), getLayerMousePosY(e.getY()), new SpecialText(' '));
+            drawTool.onDrawEnd(backdropLayer, highlightLayer, getLayerMousePosX(e.getX()), getLayerMousePosY(e.getY()), drawToolManager.getActiveCharacter());
             undoManager.recordGameMap(); //That must have done something, so better get the UndoManager to record that.
         }
         movingCamera = false;
@@ -110,13 +113,14 @@ public class EditorMouseInput implements MouseInputListener, MouseWheelListener{
 
     @Override
     public void mouseDragged(MouseEvent e) {
+        DrawTool drawTool = drawToolManager.getActiveTool();
         if (movingCamera) { //Do some moving camera business, if in camera-moving-mode
             manager.moveCameraPos(previousCharXPos - window.getSnappedMouseX(e.getX()), previousCharYPos - window.getSnappedMouseY(e.getY()));
             previousCharXPos = window.getSnappedMouseX(e.getX());
             previousCharYPos = window.getSnappedMouseY(e.getY());
         } else if (drawing){ //If drawing, tell the DrawTool that you are drawing.
             updateMouseCursorPos(e.getX(), e.getY());
-            drawTool.onDraw(backdropLayer, highlightLayer, getLayerMousePosX(e.getX()), getLayerMousePosY(e.getY()), new SpecialText(' '));
+            drawTool.onDraw(backdropLayer, highlightLayer, getLayerMousePosX(e.getX()), getLayerMousePosY(e.getY()), drawToolManager.getActiveCharacter());
         } else {
             updateMouseCursorPos(e.getX(), e.getY());
         }
@@ -140,10 +144,6 @@ public class EditorMouseInput implements MouseInputListener, MouseWheelListener{
         previousCharYPos = window.getSnappedMouseY(rawY);
     }
 
-    void setDrawTool(DrawTool drawTool) { this.drawTool = drawTool; }
-
-    DrawTool getDrawTool() { return drawTool; }
-
     public void toggleCoordinateDisplay(){
         cursorTooltip.showCoordinate = !cursorTooltip.showCoordinate;
     }
@@ -155,7 +155,7 @@ public class EditorMouseInput implements MouseInputListener, MouseWheelListener{
     private int originalResolutionWidth;
     private int originalResolutionHeight;
     int zoomAmount = 100;
-    CameraManager cm;
+    public CameraManager cm;
 
     @Override
     public void mouseWheelMoved(MouseWheelEvent e) {
