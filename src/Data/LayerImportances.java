@@ -19,5 +19,6 @@ public class LayerImportances {
 
     public static final int BACKDROP          = 0;
     public static final int TOKENS            = 5;
+    public static final int HIDE              = 7;
     public static final int CURSOR            = 10;
 }

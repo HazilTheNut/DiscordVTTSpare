@@ -1,6 +1,7 @@
 package Editor.DrawTools;
 
 import Data.Coordinate;
+import Data.GameMap;
 import Engine.Layer;
 import Engine.LayerManager;
 import Engine.SpecialText;
@@ -27,17 +28,17 @@ public class ArtBrush extends ArtLine {
     private Coordinate prevPos;
 
     @Override
-    public void onDraw(Layer layer, Layer highlight, int col, int row, SpecialText text) {
-        drawLine(layer, col, row, prevPos.getX(), prevPos.getY(), text);
+    public void onDraw(GameMap gameMap, Layer highlight, int col, int row, SpecialText text) {
+        drawLine(gameMap.getBackdrop(), col, row, prevPos.getX(), prevPos.getY(), text);
         prevPos = new Coordinate(col, row);
     }
 
     @Override
-    public void onDrawStart(Layer layer, Layer highlight, int col, int row, SpecialText text) {
+    public void onDrawStart(GameMap gameMap, Layer highlight, int col, int row, SpecialText text) {
         prevPos = new Coordinate(col, row);
-        drawBrush(layer, col, row, text);
+        drawBrush(gameMap.getBackdrop(), col, row, text);
     }
 
     @Override
-    public void onDrawEnd(Layer layer, Layer highlight, int col, int row, SpecialText text) { }
+    public void onDrawEnd(GameMap gameMap, Layer highlight, int col, int row, SpecialText text) { }
 }

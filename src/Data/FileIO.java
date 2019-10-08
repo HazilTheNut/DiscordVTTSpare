@@ -1,6 +1,6 @@
 package Data;
 
-import Editor.Mapping.CameraManager;
+import Start.EditorStart;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -105,7 +105,7 @@ public class FileIO {
     public File chooseGameMap(){
         String path = "";
         try {
-            path = decodeFilePath(CameraManager.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath());
+            path = decodeFilePath(EditorStart.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath());
             path = path.substring(0, path.lastIndexOf('/'));
             path += "/GameMap";
             return chooseFile(path, "lda", "Sourcery Text Level Data");

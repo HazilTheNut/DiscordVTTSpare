@@ -1,6 +1,7 @@
 package Editor.DrawTools;
 
 import Data.Coordinate;
+import Data.GameMap;
 import Editor.CollapsiblePanel;
 import Engine.Layer;
 import Engine.SpecialText;
@@ -20,9 +21,8 @@ public class ArtFill extends DrawTool {
      * A tool that runs a recursive spread function to fill in areas, much like a paint bucket tool in conventional art programs.
      */
 
-    private JSpinner fillSizeBox;
     private JCheckBox edgesOnlyBox;
-    
+
     @Override
     public void onActivate(JPanel panel) {
         edgesOnlyBox = new JCheckBox("Edge Only");
@@ -35,8 +35,8 @@ public class ArtFill extends DrawTool {
     }
 
     @Override
-    public void onDrawStart(Layer layer, Layer highlight, int col, int row, SpecialText text) {
-        Thread fillThread = new Thread(() -> doFill(layer, layer.getSpecialText(col, row), text, col, row), "fill");
+    public void onDrawStart(GameMap gameMap, Layer highlight, int col, int row, SpecialText text) {
+        Thread fillThread = new Thread(() -> doFill(gameMap.getBackdrop(), gameMap.getBackdrop().getSpecialText(col, row), text, col, row), "fill");
         fillThread.start();
     }
 
@@ -52,7 +52,6 @@ public class ArtFill extends DrawTool {
      */
     private void doFill(Layer layer, SpecialText fillOn, SpecialText fillWith, int col, int row){
         if (areTwoSpecTxtsEqual(fillOn, fillWith)) return;
-        int maxDist = ((SpinnerNumberModel)fillSizeBox.getModel()).getNumber().intValue();
         futurePoints.clear();
         processedPoints.clear();
         currentPoints.clear();
@@ -61,7 +60,8 @@ public class ArtFill extends DrawTool {
             moveFutureToPresentPoints();
             for (int i = 0; i < currentPoints.size();) {
                 Coordinate point = currentPoints.get(i);
-                if (point.stepDistance(new Coordinate(col, row)) <= maxDist) {
+                int FILL_MAXDIST = 250;
+                if (point.stepDistance(new Coordinate(col, row)) <= FILL_MAXDIST) {
                     boolean failed;
                     failed =  !attemptFuturePoint(layer, point.getX() + 1, point.getY(), fillOn);
                     failed |= !attemptFuturePoint(layer, point.getX() - 1, point.getY(), fillOn);

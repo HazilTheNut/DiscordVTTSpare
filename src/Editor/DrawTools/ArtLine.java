@@ -1,5 +1,6 @@
 package Editor.DrawTools;
 
+import Data.GameMap;
 import Engine.Layer;
 import Engine.LayerManager;
 import Engine.SpecialText;
@@ -54,15 +55,15 @@ public class ArtLine extends DrawTool {
     }
 
     @Override
-    public void onDrawStart(Layer layer, Layer highlight, int col, int row, SpecialText text) {
+    public void onDrawStart(GameMap gameMap, Layer highlight, int col, int row, SpecialText text) {
         startX = col;
         startY = row;
     }
 
     @Override
-    public void onDraw(Layer layer, Layer highlight, int col, int row, SpecialText text) {
-        int xOffset = -lm.getCameraPos().getX() + layer.getX(); //Corrections need to be made for the camera.
-        int yOffset = -lm.getCameraPos().getY() + layer.getY(); //It does also do corrections for the backdrop layer moving around, but the Level's backdrop does ever move.
+    public void onDraw(GameMap gameMap, Layer highlight, int col, int row, SpecialText text) {
+        int xOffset = -lm.getCameraPos().getX() + gameMap.getBackdrop().getX(); //Corrections need to be made for the camera.
+        int yOffset = -lm.getCameraPos().getY() + gameMap.getBackdrop().getY(); //It does also do corrections for the backdrop layer moving around, but the Level's backdrop doesn't ever move.
         drawLine(highlight, startX + xOffset, startY + yOffset, previousX + xOffset, previousY + yOffset, null); //Draw a line of null characters over the previous line
         drawLine(highlight, startX + xOffset, startY + yOffset, col + xOffset, row + yOffset, startHighlight); //Draw the new line
         previousX = col;
@@ -70,9 +71,9 @@ public class ArtLine extends DrawTool {
     }
 
     @Override
-    public void onDrawEnd(Layer layer, Layer highlight, int col, int row, SpecialText text) {
+    public void onDrawEnd(GameMap gameMap, Layer highlight, int col, int row, SpecialText text) {
         highlight.clearLayer(); //Get rid of preview highlight
-        drawLine(layer, startX, startY, col, row, text);
+        drawLine(gameMap.getBackdrop(), startX, startY, col, row, text);
     }
 
     @Override

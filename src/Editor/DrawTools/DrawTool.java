@@ -1,5 +1,6 @@
 package Editor.DrawTools;
 
+import Data.GameMap;
 import Engine.Layer;
 import Engine.SpecialText;
 
@@ -21,13 +22,13 @@ public abstract class DrawTool {
     public static final int TYPE_ENTITY = 3;
 
     //Ran upon pressing left click down
-    public void onDrawStart(Layer layer, Layer highlight, int col, int row, SpecialText text) {}
+    public void onDrawStart(GameMap gameMap, Layer highlight, int col, int row, SpecialText text) {}
 
     //Ran while left click is pressed
-    public void onDraw(Layer layer, Layer highlight, int col, int row, SpecialText text) {}
+    public void onDraw(GameMap gameMap, Layer highlight, int col, int row, SpecialText text) {}
 
     //Ran upon releasing left click
-    public void onDrawEnd(Layer layer, Layer highlight, int col, int row, SpecialText text) {}
+    public void onDrawEnd(GameMap gameMap, Layer highlight, int col, int row, SpecialText text) {}
 
     //Ran when switching to new tool
     public void onDeactivate(JPanel panel) {}

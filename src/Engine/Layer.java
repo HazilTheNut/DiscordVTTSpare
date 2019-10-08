@@ -155,7 +155,7 @@ public class Layer implements Serializable{
     }
 
     /**
-     * Inserts the SpecialText contents of one layer into this Layer
+     * Inserts the SpecialText contents of another layer into this Layer
      * @param other The layer the insert into this one
      * @param start The starting coordinate for where the insertion takes place
      */
@@ -164,9 +164,13 @@ public class Layer implements Serializable{
     }
 
     public void insert(Layer other, Coordinate start, Coordinate sampleOffset){
+        System.out.printf("[Layer.insert] Start: %1$s ; SampleOffset: %2$s\n", start, sampleOffset);
         for (int col = 0; col < other.getCols(); col++){
             for (int row = 0; row < other.getRows(); row++){
-                editLayer(col + start.getX(), row + start.getY(), other.getSpecialText(col + sampleOffset.getX(), row + sampleOffset.getY()));
+                int x = col + start.getX();
+                if (x == 0) System.out.println("zero x");
+                int y = row + start.getY();
+                editLayer(x, y, other.getSpecialText(col + sampleOffset.getX(), row + sampleOffset.getY()));
             }
         }
     }

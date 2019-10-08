@@ -1,5 +1,6 @@
 package Editor.DrawTools;
 
+import Data.GameMap;
 import Engine.Layer;
 import Engine.LayerManager;
 import Engine.SpecialText;
@@ -43,15 +44,15 @@ public class ArtRectangle extends DrawTool {
     }
 
     @Override
-    public void onDrawStart(Layer layer, Layer highlight, int col, int row, SpecialText text) {
+    public void onDrawStart(GameMap gameMap, Layer highlight, int col, int row, SpecialText text) {
         startX = col;
         startY = row;
     }
 
     @Override
-    public void onDraw(Layer layer, Layer highlight, int col, int row, SpecialText text) {
-        int xOffset = -lm.getCameraPos().getX() + layer.getX(); //Mentioned in ArtLine, but the backdrop doesn't change its position, but JUST IN CASE.....
-        int yOffset = -lm.getCameraPos().getY() + layer.getY();
+    public void onDraw(GameMap gameMap, Layer highlight, int col, int row, SpecialText text) {
+        int xOffset = -lm.getCameraPos().getX() + gameMap.getBackdrop().getX(); //Mentioned in ArtLine, but the backdrop doesn't change its position, but JUST IN CASE.....
+        int yOffset = -lm.getCameraPos().getY() + gameMap.getBackdrop().getY();
         drawRect(highlight, startX + xOffset, startY + yOffset, previousX + xOffset, previousY + yOffset, null, fillBox.isSelected()); //Clear the previous rectangle
         drawRect(highlight, startX + xOffset, startY + yOffset, col + xOffset, row + yOffset, startHighlight, fillBox.isSelected()); //Make a new one
         previousX = col;
@@ -60,9 +61,9 @@ public class ArtRectangle extends DrawTool {
     }
 
     @Override
-    public void onDrawEnd(Layer layer, Layer highlight, int col, int row, SpecialText text) {
+    public void onDrawEnd(GameMap gameMap, Layer highlight, int col, int row, SpecialText text) {
         highlight.clearLayer();
-        drawRect(layer, startX, startY, col, row, text, fillBox.isSelected());
+        drawRect(gameMap.getBackdrop(), startX, startY, col, row, text, fillBox.isSelected());
     }
 
     @Override

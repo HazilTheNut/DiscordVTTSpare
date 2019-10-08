@@ -82,7 +82,7 @@ public class EditorMouseInput implements MouseInputListener, MouseWheelListener{
                 highlightLayer.editLayer(window.getSnappedMouseX(e.getX()), window.getSnappedMouseY(e.getY()), null);
             }
         } else if (e.getButton() == MouseEvent.BUTTON1 && !movingCamera && drawTool != null){ //Left-click starts drawing
-            drawTool.onDrawStart(backdropLayer, highlightLayer, getLayerMousePosX(e.getX()), getLayerMousePosY(e.getY()), drawToolManager.getActiveCharacter());
+            drawTool.onDrawStart(gamemap, highlightLayer, getLayerMousePosX(e.getX()), getLayerMousePosY(e.getY()), drawToolManager.getActiveCharacter());
             drawing = true;
         }
     }
@@ -91,7 +91,7 @@ public class EditorMouseInput implements MouseInputListener, MouseWheelListener{
     public void mouseReleased(MouseEvent e) {
         DrawTool drawTool = drawToolManager.getActiveTool();
         if (drawing && e.getButton() == MouseEvent.BUTTON1 && drawTool != null) { //Should tell the DrawTool to end
-            drawTool.onDrawEnd(backdropLayer, highlightLayer, getLayerMousePosX(e.getX()), getLayerMousePosY(e.getY()), drawToolManager.getActiveCharacter());
+            drawTool.onDrawEnd(gamemap, highlightLayer, getLayerMousePosX(e.getX()), getLayerMousePosY(e.getY()), drawToolManager.getActiveCharacter());
             undoManager.recordGameMap(); //That must have done something, so better get the UndoManager to record that.
         }
         movingCamera = false;
@@ -120,7 +120,7 @@ public class EditorMouseInput implements MouseInputListener, MouseWheelListener{
             previousCharYPos = window.getSnappedMouseY(e.getY());
         } else if (drawing){ //If drawing, tell the DrawTool that you are drawing.
             updateMouseCursorPos(e.getX(), e.getY());
-            drawTool.onDraw(backdropLayer, highlightLayer, getLayerMousePosX(e.getX()), getLayerMousePosY(e.getY()), drawToolManager.getActiveCharacter());
+            drawTool.onDraw(gamemap, highlightLayer, getLayerMousePosX(e.getX()), getLayerMousePosY(e.getY()), drawToolManager.getActiveCharacter());
         } else {
             updateMouseCursorPos(e.getX(), e.getY());
         }
@@ -155,7 +155,6 @@ public class EditorMouseInput implements MouseInputListener, MouseWheelListener{
     private int originalResolutionWidth;
     private int originalResolutionHeight;
     int zoomAmount = 100;
-    public CameraManager cm;
 
     @Override
     public void mouseWheelMoved(MouseWheelEvent e) {
@@ -163,7 +162,6 @@ public class EditorMouseInput implements MouseInputListener, MouseWheelListener{
         zoomAmount += e.getPreciseWheelRotation() * -10;
         updateZoom();
         updateMouseCursorPos(e.getX(), e.getY());
-        if (cm != null) cm.updateLabel();
     }
 
     public void updateZoom(){

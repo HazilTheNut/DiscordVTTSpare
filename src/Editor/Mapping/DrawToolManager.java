@@ -16,11 +16,13 @@ public class DrawToolManager implements KeyListener {
     private SpecialText activeCharacter;
     private SingleTextRenderer renderer;
     private JLabel renderLabel;
+    private JPanel toolbarPanel;
 
-    public DrawToolManager(JPanel toolOptionsPanel, SingleTextRenderer renderer, JLabel renderLabel){
+    public DrawToolManager(JPanel toolOptionsPanel, SingleTextRenderer renderer, JLabel renderLabel, JPanel toolbarPanel){
         this.toolOptionsPanel = toolOptionsPanel;
         this.renderer = renderer;
         this.renderLabel = renderLabel;
+        this.toolbarPanel = toolbarPanel;
     }
 
     @Override
@@ -70,6 +72,9 @@ public class DrawToolManager implements KeyListener {
             toolOptionsPanel.validate();
             toolOptionsPanel.repaint();
             activeTool.button.setEnabled(false); //Disallows clicking a tool button twice and causing double-initialization, which can be troublesome.
+            toolbarPanel.doLayout();
+            toolbarPanel.revalidate();
+            toolbarPanel.repaint();
         });
         return btn;
     }

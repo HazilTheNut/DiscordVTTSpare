@@ -16,7 +16,7 @@ public class GameMapEditorPane extends JPanel {
 
     private EditorMouseInput mouseInput;
 
-    public GameMapEditorPane(GameMap gameMap){
+    public GameMapEditorPane(GameMap gameMap, JTabbedPane owner){
 
         setLayout(new BorderLayout());
         setFocusable(true);
@@ -29,13 +29,15 @@ public class GameMapEditorPane extends JPanel {
 
         viewWindow.addMouseListener(viewWindow);
         viewWindow.addKeyListener(viewWindow);
+        owner.addKeyListener(viewWindow);
 
         SingleTextRenderer activeTextDisplay = new SingleTextRenderer(new SpecialText(' '));
+        JPanel topToolbar = new JPanel();
         JPanel toolOptionsPanel = new JPanel();
         toolOptionsPanel.setLayout(new BorderLayout());
         toolOptionsPanel.setBorder(BorderFactory.createEmptyBorder());
         JLabel activeTextLabel = new JLabel(activeTextDisplay);
-        DrawToolManager drawToolManager = new DrawToolManager(toolOptionsPanel, activeTextDisplay, activeTextLabel);
+        DrawToolManager drawToolManager = new DrawToolManager(toolOptionsPanel, activeTextDisplay, activeTextLabel, topToolbar);
 
         //Create mousee highlight
         Layer mouseHighlight = new Layer(new SpecialText[viewWindow.RESOLUTION_WIDTH*4][viewWindow.RESOLUTION_HEIGHT*4], "mouse", 0, 0, LayerImportances.CURSOR);
@@ -69,24 +71,30 @@ public class GameMapEditorPane extends JPanel {
 
         add(centerPanel, BorderLayout.CENTER);
 
-        JPanel topToolbar = new JPanel();
         topToolbar.setLayout(new FlowLayout(FlowLayout.LEFT, 3, 0));
 
+        topToolbar.add(drawToolManager.generateToolButton(new ExpandRoom(manager), "Icons/expand.png", "Expand Area ; click outside bounds to expand size"));
+
+        topToolbar.add(new JLabel(" | "));
+
         topToolbar.add(new LayerToggler(gameMap.getBackdrop(), "backdrop"));
-        topToolbar.add(new LayerToggler(gameMap.getTokenLayer(), "tokens"));
-
-        topToolbar.add(new JLabel(" | "));
-
-        topToolbar.add(drawToolManager.generateToolButton(new ExpandRoom(gameMap, manager), "Icons/expand.png", "Expand Area ; click outside bounds to expand size"));
-
-        topToolbar.add(new JLabel(" | "));
-
         topToolbar.add(activeTextLabel);
         topToolbar.add(drawToolManager.generateToolButton(new ArtBrush(manager), "Icons/brush.png", "(Backdrop) Brush Tool"));
         topToolbar.add(drawToolManager.generateToolButton(new ArtLine(manager), "Icons/line.png", "(Backdrop) Line Tool"));
         topToolbar.add(drawToolManager.generateToolButton(new ArtRectangle(manager), "Icons/rectangle.png", "(Backdrop) Rectangle Tool"));
         topToolbar.add(drawToolManager.generateToolButton(new ArtFill(), "Icons/fill.png", "(Backdrop) Fill Tool"));
         topToolbar.add(toolOptionsPanel);
+
+        topToolbar.add(new JLabel(" | "));
+
+        topToolbar.add(new LayerToggler(gameMap.getTokenLayer(), "tokens"));
+        topToolbar.add(drawToolManager.generateToolButton(new TokenPlace(), "Icons/tokenplace.png", "(Tokens) Place Token"));
+        topToolbar.add(drawToolManager.generateToolButton(new TokenRemove(), "Icons/tokenremove.png", "(Tokens) Remove Token"));
+        topToolbar.add(drawToolManager.generateToolButton(new TokenMove(manager), "Icons/tokenmove.png", "(Tokens) Move Token"));
+
+        topToolbar.add(new JLabel(" | "));
+
+        topToolbar.add(new LayerToggler(gameMap.getHideLayer(), "hide"));
 
         add(topToolbar, BorderLayout.PAGE_START);
     }

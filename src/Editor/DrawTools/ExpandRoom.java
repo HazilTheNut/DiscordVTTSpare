@@ -1,7 +1,6 @@
 package Editor.DrawTools;
 
 import Data.GameMap;
-import Editor.EditorFrame;
 import Engine.Layer;
 import Engine.LayerManager;
 import Engine.SpecialText;
@@ -19,11 +18,9 @@ public class ExpandRoom extends DrawTool {
      * The Tool that expands the size of a Level, allowing levels to get really big.
      */
 
-    private GameMap gamemap;
     private LayerManager lm;
 
-    public ExpandRoom(GameMap GameMap, LayerManager manager){
-        gamemap = GameMap;
+    public ExpandRoom(LayerManager manager){
         lm = manager;
     }
 
@@ -33,12 +30,16 @@ public class ExpandRoom extends DrawTool {
     }
 
     @Override
-    public void onDrawStart(Layer layer, Layer highlight, int col, int row, SpecialText text) {
-        System.out.println("Draw pos: " + col + "," + row);
-        System.out.println("Layer dim: " + layer.getCols() + "x"  + layer.getRows());
-        int newWidth = (col < 0) ? -1 * col : Math.max(0, gamemap.getBackdrop().getCols());
-        int newHeight = (row < 0) ? -1 * row : Math.max(0, gamemap.getBackdrop().getRows());
-        gamemap.resize(newWidth, newHeight); //This one line of code encapsulates a much, much larger algorithm that ExpandRoom doesn't need to care about. How nice.
+    public void onDrawStart(GameMap gameMap, Layer highlight, int col, int row, SpecialText text) {
+        //System.out.println("Draw pos: " + col + "," + row);
+        //System.out.println("Layer dim: " + layer.getCols() + "x"  + layer.getRows());
+        int newWidth = (col < 0) ? gameMap.getBackdrop().getCols() - col: Math.max(col+1, gameMap.getBackdrop().getCols());
+        int newHeight = (row < 0) ? gameMap.getBackdrop().getRows() - row: Math.max(row+1, gameMap.getBackdrop().getRows());
+        //System.out.println("New dim: " + newWidth + "x"  + newHeight);
+        int offsetX = (col < 0) ? -1 * col : 0;
+        int offsetY = (row < 0) ? -1 * row : 0;
+        //System.out.println("Offset: x+" + offsetX + ", y+"  + offsetY);
+        gameMap.resize(newWidth, newHeight, offsetX, offsetY); //This one line of code encapsulates a much, much larger algorithm that ExpandRoom doesn't need to care about. How nice.
         if (col < 0)
             lm.moveCameraPos(-col, 0); //Moves the camera to appear as if the level moved instead of you.
         if (row < 0)

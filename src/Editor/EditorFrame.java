@@ -2,28 +2,16 @@ package Editor;
 
 import Data.GameMap;
 import Editor.Mapping.GameMapEditorPane;
-import Editor.Mapping.LayerToggler;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
 
 /**
  * Created by Jared on 2/18/2018.
  */
 public class EditorFrame extends JFrame {
-
-    /**
-     * EditorFrame:
-     *
-     * The master object behind the Sourcery Text Level Editor
-     *
-     * Each EditorFrame is dedicated to a singular GameMap object.
-     */
-
-    private JPanel windowLayersPanel;
 
     public EditorFrame(GameMap gamemap, WindowWatcher watcher){
 
@@ -32,7 +20,7 @@ public class EditorFrame extends JFrame {
         setLayout(new BorderLayout());
 
         JTabbedPane mainPane = new JTabbedPane();
-        mainPane.addTab("GameMap", new GameMapEditorPane(gamemap));
+        mainPane.addTab("Mapping Tool", new GameMapEditorPane(gamemap, mainPane));
         mainPane.setFocusable(true);
 
         c.add(mainPane);
@@ -41,7 +29,7 @@ public class EditorFrame extends JFrame {
 
         setSize(new Dimension(850, 790));
 
-        setTitle("DnDiscord");
+        setTitle("DnDiscord - Discord Dungeons and Dragons Gameplay Assistant");
 
         setVisible(true);
 
@@ -104,46 +92,4 @@ public class EditorFrame extends JFrame {
         });
     }
 
-    public void updateLayerControllers(){
-        for (Component c : windowLayersPanel.getComponents())
-            if (c instanceof LayerToggler) {
-                LayerToggler layerToggler = (LayerToggler) c;
-                layerToggler.update();
-            }
-    }
-
-    void removeLayerController(LayerToggler toggler){
-        windowLayersPanel.remove(toggler);
-    }
-
-    /**
-     * Adds a LayerToggler to the list at the top of the screen. Returns whether or not a new layer toggler was added.
-     *
-     * @param toggler The LayerToggler you want to add
-     * @return Returns true if the LayerToggler had not already existed in the list, and false if it had.
-     */
-    boolean addLayerToggler(LayerToggler toggler){
-        for (Component c : windowLayersPanel.getComponents())
-            if (toggler.equals(c)) return false;
-        windowLayersPanel.add(toggler);
-        windowLayersPanel.validate();
-        return true;
-    }
-
-    public ArrayList<LayerToggler> getLayerTogglers(){
-        ArrayList<LayerToggler> togglers = new ArrayList<>();
-        for (Component c : windowLayersPanel.getComponents())
-            if (c instanceof LayerToggler) {
-                togglers.add((LayerToggler)c);
-            }
-        return togglers;
-    }
-
-    public LayerToggler getLayerToggler(String name){
-        for (LayerToggler toggler : getLayerTogglers()){
-            if (toggler.getLayer().getName().equals(name))
-                return toggler;
-        }
-        return null;
-    }
 }
