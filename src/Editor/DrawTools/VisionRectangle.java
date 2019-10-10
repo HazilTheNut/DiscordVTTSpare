@@ -47,7 +47,7 @@ public class VisionRectangle extends DrawTool {
 
     @Override
     public void onDraw(GameMap gameMap, Layer highlight, int col, int row, SpecialText text) {
-        int xOffset = -lm.getCameraPos().getX() + gameMap.getHideLayer().getX(); //Mentioned in ArtLine, but the backdrop doesn't change its position, but JUST IN CASE.....
+        int xOffset = -lm.getCameraPos().getX() + gameMap.getHideLayer().getX(); //Mentioned in ArtLine, but the layers don't change its position, but JUST IN CASE.....
         int yOffset = -lm.getCameraPos().getY() + gameMap.getHideLayer().getY();
         drawRect(highlight, startX + xOffset, startY + yOffset, previousX + xOffset, previousY + yOffset, null); //Clear the previous rectangle
         drawRect(highlight, startX + xOffset, startY + yOffset, col + xOffset, row + yOffset, startHighlight); //Make a new one

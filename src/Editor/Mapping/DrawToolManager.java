@@ -30,8 +30,8 @@ public class DrawToolManager implements KeyListener {
         //System.out.println("[DrawToolManager] Input caught!");
         Color fontColor = new Color(200, 200, 200);
         if (!e.isControlDown() && !e.isMetaDown()) {
-            activeCharacter = new SpecialText(e.getKeyChar(), fontColor, Color.BLACK);
-            renderer.specText = activeCharacter;
+            activeCharacter = new SpecialText(e.getKeyChar(), fontColor, new Color(0, 0, 0, 0));
+            renderer.specText = new SpecialText(activeCharacter.getCharacter(), fontColor, Color.BLACK);
             renderLabel.repaint();
         }
     }

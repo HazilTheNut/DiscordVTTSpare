@@ -52,4 +52,9 @@ public class TokenMove extends DrawTool {
         gameMap.getTokenLayer().editLayer(col, row, chosenToken);
         highlight.clearLayer();
     }
+
+    @Override
+    public void onCancel(Layer highlight, int col, int row) {
+        highlight.clearLayer();
+    }
 }

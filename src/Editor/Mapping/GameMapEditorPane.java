@@ -100,6 +100,10 @@ public class GameMapEditorPane extends JPanel {
         topToolbar.add(drawToolManager.generateToolButton(new VisionRectangle(manager, null), "Icons/showarea.png", "(Vision) Show Area"));
         topToolbar.add(drawToolManager.generateToolButton(new VisionRectangle(manager, new SpecialText(' ', Color.WHITE, VisionConstants.VISION_HIDE_COLOR)), "Icons/hidearea.png", "(Vision) Hide Area"));
 
+        topToolbar.add(new JLabel(" | "));
+
+        topToolbar.add(drawToolManager.generateToolButton(new RenderArea(manager), "Icons/camera.png", "Render Area ; renders a selected area to display on Discord."));
+
         add(topToolbar, BorderLayout.PAGE_START);
     }
 }

@@ -38,7 +38,7 @@ public class GameMap {
         hideLayer = new Layer(width, height, "hide", 0, 0, LayerImportances.HIDE);
     }
 
-    public void initialize() { initialize(52, 22); }
+    public void initialize() { initialize(51, 27); }
 
     public void resize(int newWidth, int newHeight, int offsetX, int offsetY){
         //Due to pointer-y things, the following workaround must exist:
