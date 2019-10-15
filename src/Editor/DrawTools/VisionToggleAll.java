@@ -1,6 +1,7 @@
 package Editor.DrawTools;
 
 import Data.GameMap;
+import Editor.Mapping.MappingTheme;
 import Engine.Layer;
 import Engine.SpecialText;
 
@@ -14,7 +15,7 @@ public class VisionToggleAll extends DrawTool {
         for (int c = 0; c < gameMap.getHideLayer().getCols(); c++) {
             for (int r = 0; r < gameMap.getHideLayer().getRows(); r++) {
                 visibleSpaces |= (gameMap.getHideLayer().getSpecialText(c, r) == null);
-                gameMap.getHideLayer().editLayer(c, r, new SpecialText(' ', Color.WHITE, VisionConstants.VISION_HIDE_COLOR));
+                gameMap.getHideLayer().editLayer(c, r, new SpecialText(' ', Color.WHITE, MappingTheme.VISION_HIDE_COLOR));
             }
         }
         if (!visibleSpaces)

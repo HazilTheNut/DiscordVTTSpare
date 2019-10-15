@@ -22,6 +22,10 @@ public class FileIO {
 
       A catch-all utility class for saving and loading GameMap's and GameInstance's
      */
+     
+     private final String GAMEMAP_FILE_EXT = "vttmap";
+     private final String GAMEMAP_EXT_DESC = "DiscordVTT Game Map";
+     
 
     /**
      * Gets the 'root file path' that points to the file folder where the SourceryText and LevelEditor .jar's are located.
@@ -97,7 +101,7 @@ public class FileIO {
     }
 
     /**
-     * Runs the FileChooser to pick a .lda file.
+     * Runs the FileChooser to pick a .vttmap file.
      *
      * This method lazily starts the FileChooser beginning location at the root file path
      * @return The selected File
@@ -108,21 +112,21 @@ public class FileIO {
             path = decodeFilePath(EditorStart.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath());
             path = path.substring(0, path.lastIndexOf('/'));
             path += "/GameMap";
-            return chooseFile(path, "lda", "Sourcery Text Level Data");
+            return chooseFile(path, GAMEMAP_FILE_EXT, GAMEMAP_EXT_DESC);
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
-        return chooseFile(path, "lda", "Sourcery Text Level Data");
+        return chooseFile(path, GAMEMAP_FILE_EXT, GAMEMAP_EXT_DESC);
     }
 
     /**
-     * Runs the FileChooser to pick a .lda file.
+     * Runs the FileChooser to pick a .vttmap file.
      *
      * @param path : The path you want to start with for the file chooser
      * @return The selected File
      */
     public File chooseGameMap(String path){
-        return chooseFile(path, "lda", "Sourcery Text Level Data");
+        return chooseFile(path, GAMEMAP_FILE_EXT, GAMEMAP_EXT_DESC);
     }
 
     /**
@@ -148,7 +152,7 @@ public class FileIO {
     }
 
     /**
-     * De-serializes a .lda file that is compressed via GZIP.
+     * De-serializes a .vttmap file that is compressed via GZIP.
      *
      * @param savedLevel The GameMap file being opened.
      * @return The now-usable GameMap.
@@ -171,28 +175,7 @@ public class FileIO {
     }
 
     /**
-     * De-serializes a .lda file that is not compressed via GZIP
-     *
-     * @param savedLevel The GameMap file being opened.
-     * @return The now-usable GameMap.
-     */
-    public GameMap openLevelNonGZIP(File savedLevel){
-        try {
-            FileInputStream fileIn = new FileInputStream(savedLevel);
-            ObjectInputStream objIn = new ObjectInputStream(fileIn);
-            GameMap gameMap = (GameMap)objIn.readObject();
-            objIn.close();
-            fileIn.close();
-            return gameMap;
-        } catch (IOException | ClassNotFoundException e) {
-            JOptionPane.showMessageDialog(new JFrame(), "ERROR: File being accessed is out of date / improper!", "Error", JOptionPane.ERROR_MESSAGE);
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    /**
-     * Serializes a GameMap (saving it) as a .lda file
+     * Serializes a GameMap (saving it) as a .vttmap file
      * @param gamemap GameMap being saved
      * @param startingPath file path to start prompt from
      * @return chosen file path
@@ -203,8 +186,8 @@ public class FileIO {
         int fileChooseOption = fileChooser.showSaveDialog(new Component(){});
         if (fileChooseOption == JFileChooser.APPROVE_OPTION){
             path = decodeFilePath(fileChooser.getSelectedFile().getPath());
-            if (!path.endsWith(".lda")) { // Add '.lda' to file if user didn't.
-                path += ".lda";
+            if (!path.endsWith(".vttmap")) { // Add '.vttmap' to file if user didn't.
+                path += ".vttmap";
             }
             quickSerializeGameMap(gamemap, path);
             return path;
@@ -234,10 +217,6 @@ public class FileIO {
         } catch (java.io.IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public InputMap openInputMap(File mapFile){
-        return (InputMap)openSerializedFile(mapFile);
     }
 
     private Object openSerializedFile(File gameFile){

@@ -2,7 +2,11 @@ package Data;
 
 import Engine.Layer;
 
-public class GameMap {
+import java.io.Serializable;
+
+public class GameMap implements Serializable {
+
+    private static final long serialVersionUID = SerializationVersion.SERIALIZATION_VERSION;
 
     private Layer backdrop;
     private Layer tokenLayer;
@@ -27,9 +31,9 @@ public class GameMap {
     }
 
     public void setAllData(GameMap other){
-        backdrop = other.getBackdrop().copy();
-        tokenLayer = other.getTokenLayer().copy();
-        hideLayer = other.getHideLayer().copy();
+        backdrop.transpose(other.getBackdrop());
+        tokenLayer.transpose(other.getTokenLayer());
+        hideLayer.transpose(other.getHideLayer());
     }
 
     public void initialize(int width, int height){

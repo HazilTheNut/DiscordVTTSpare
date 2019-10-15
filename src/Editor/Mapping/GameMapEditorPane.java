@@ -96,14 +96,39 @@ public class GameMapEditorPane extends JPanel {
         topToolbar.add(new JLabel(" | "));
 
         topToolbar.add(new LayerToggler(gameMap.getHideLayer(), "vision"));
-        topToolbar.add(drawToolManager.generateToolButton(new VisionToggleAll(), "Icons/toggleall.png", "(Vision) Toggle All"));
+        //topToolbar.add(drawToolManager.generateToolButton(new VisionToggleAll(), "Icons/toggleall.png", "(Vision) Toggle All"));
+        JButton toggleButton = drawToolManager.generateGenericToolbarButton("Icons/toggleall.png", "(Vision) Toggle All");
+        toggleButton.addActionListener(e -> toggleVisionLayer(gameMap));
+        topToolbar.add(toggleButton); //We forgo using the Tools system since it is more intuitive to click the button to toggle everywhere.
         topToolbar.add(drawToolManager.generateToolButton(new VisionRectangle(manager, null), "Icons/showarea.png", "(Vision) Show Area"));
-        topToolbar.add(drawToolManager.generateToolButton(new VisionRectangle(manager, new SpecialText(' ', Color.WHITE, VisionConstants.VISION_HIDE_COLOR)), "Icons/hidearea.png", "(Vision) Hide Area"));
+        topToolbar.add(drawToolManager.generateToolButton(new VisionRectangle(manager, new SpecialText(' ', Color.WHITE, MappingTheme.VISION_HIDE_COLOR)), "Icons/hidearea.png", "(Vision) Hide Area"));
 
         topToolbar.add(new JLabel(" | "));
 
         topToolbar.add(drawToolManager.generateToolButton(new RenderArea(manager), "Icons/camera.png", "Render Area ; renders a selected area to display on Discord."));
 
         add(topToolbar, BorderLayout.PAGE_START);
+
+        JPanel bottomToolbar = new JPanel();
+        bottomToolbar.setLayout(new FlowLayout(FlowLayout.LEFT, 3, 0));
+
+        bottomToolbar.add(new EditorFindAndReplacePanel(gameMap, undoManager));
+        bottomToolbar.add(Box.createHorizontalGlue());
+
+        bottomToolbar.add(new MappingFilePanel(gameMap));
+
+        add(bottomToolbar, BorderLayout.PAGE_END);
+    }
+
+    private void toggleVisionLayer(GameMap gameMap){
+        boolean visibleSpaces = false;
+        for (int c = 0; c < gameMap.getHideLayer().getCols(); c++) {
+            for (int r = 0; r < gameMap.getHideLayer().getRows(); r++) {
+                visibleSpaces |= (gameMap.getHideLayer().getSpecialText(c, r) == null);
+                gameMap.getHideLayer().editLayer(c, r, new SpecialText(' ', Color.WHITE, MappingTheme.VISION_HIDE_COLOR));
+            }
+        }
+        if (!visibleSpaces)
+            gameMap.getHideLayer().clearLayer();
     }
 }

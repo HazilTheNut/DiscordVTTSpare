@@ -28,10 +28,9 @@ public class DrawToolManager implements KeyListener {
     @Override
     public void keyTyped(KeyEvent e) {
         //System.out.println("[DrawToolManager] Input caught!");
-        Color fontColor = new Color(200, 200, 200);
         if (!e.isControlDown() && !e.isMetaDown()) {
-            activeCharacter = new SpecialText(e.getKeyChar(), fontColor, new Color(0, 0, 0, 0));
-            renderer.specText = new SpecialText(activeCharacter.getCharacter(), fontColor, Color.BLACK);
+            activeCharacter = new SpecialText(e.getKeyChar(), MappingTheme.BACKDROP_FONT_COLOR, new Color(0, 0, 0, 0));
+            renderer.specText = new SpecialText(activeCharacter.getCharacter(), MappingTheme.BACKDROP_FONT_COLOR, Color.BLACK);
             renderLabel.repaint();
         }
     }
@@ -56,11 +55,7 @@ public class DrawToolManager implements KeyListener {
     }
 
     public JButton generateToolButton(DrawTool tool, String iconPath, String name){
-        FileIO io = new FileIO();
-        Icon icon = new ImageIcon(io.getRootFilePath().concat(iconPath));
-        JButton btn = new JButton(icon);
-        btn.setToolTipText(name);
-        btn.setMargin(new Insets(5, 5, 5, 5));
+        JButton btn = generateGenericToolbarButton(iconPath, name);
         ToolButtonPair pair = new ToolButtonPair(tool, btn);
         btn.addActionListener(e -> {
             //Deactivate previous tool
@@ -79,6 +74,15 @@ public class DrawToolManager implements KeyListener {
             toolbarPanel.revalidate();
             toolbarPanel.repaint();
         });
+        return btn;
+    }
+
+    JButton generateGenericToolbarButton(String iconPath, String name){
+        FileIO io = new FileIO();
+        Icon icon = new ImageIcon(io.getRootFilePath().concat(iconPath));
+        JButton btn = new JButton(icon);
+        btn.setToolTipText(name);
+        btn.setMargin(new Insets(5, 5, 5, 5));
         return btn;
     }
 
